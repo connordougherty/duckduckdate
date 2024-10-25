@@ -1,0 +1,24 @@
+{
+  "manifest_version": 2,
+  "name": "DuckDuckDate",
+  "version": "1.0",
+  "description": "This Firefox extension enhances your DuckDuckGo search experience by adding the original post date to Reddit links in your search results.",
+  "icons": {
+    "48": "icons/48.png",
+    "96": "icons/96.png"
+  },
+  "permissions": [
+    "activeTab",
+    "https://www.reddit.com/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": [
+        "*://duckduckgo.com/*"
+      ],
+      "js": [
+        "content.js"
+      ]
+    }
+  ]
+}
