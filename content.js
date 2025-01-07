@@ -1,10 +1,10 @@
 function addMissingDates() {
     const searchResults = document.querySelectorAll("ol.react-results--main > li > article > div > h2 > a");
 
-    const createDateElement = (date) => {
+    const createDateElement = (text) => {
         const dateSpan = document.createElement("span");
         dateSpan.className = "MILR5XIVy9h75WrLvKiq";
-        dateSpan.textContent = date;
+        dateSpan.textContent = text;
         return dateSpan;
     };
 
@@ -27,20 +27,25 @@ function addMissingDates() {
 
         if (url.includes("reddit.com")) {
             const jsonUrl = `${url.slice(0, -1)}.json`;
+            const parentElement = result.closest("article").querySelector("div > div > div > span.kY2IgmnCmOGjharHErah");
 
-            fetchDateFromUrl(jsonUrl)
-                .then(formattedDate => {
-                    if (formattedDate) {
-                        const existingSpan = result.closest("article").querySelector("div > div > div > span > span.MILR5XIVy9h75WrLvKiq");
-                        if (!existingSpan) {
-                            const parentElement = result.closest("article").querySelector("div > div > div > span.kY2IgmnCmOGjharHErah");
-                            if (parentElement) {
-                                parentElement.prepend(createDateElement(formattedDate));
-                            }
+            if (parentElement) {
+                const loadingSpan = createDateElement("Loading date...");
+                parentElement.prepend(loadingSpan);
+
+                fetchDateFromUrl(jsonUrl)
+                    .then(formattedDate => {
+                        if (formattedDate) {
+                            loadingSpan.textContent = formattedDate;
+                        } else {
+                            loadingSpan.textContent = "Date not available";
                         }
-                    }
-                })
-                .catch(error => console.error('Fetch error:', error));
+                    })
+                    .catch(error => {
+                        console.error('Fetch error:', error);
+                        loadingSpan.textContent = "Error loading date";
+                    });
+            }
         }
     });
 }
